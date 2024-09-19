@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define ASCII_MIN 32
+#define ASCII_MAX 126
+
+// Function to calculate the absolute difference
+int abs_diff(int a, int b) {
+    return abs(a - b);
+}
+
+// Function to find the nearest good letter
+char find_nearest_good_letter(char current, const char *good_string, char previous_good) {
+    int n = strlen(good_string);
+    int min_distance = abs_diff(current, good_string[0]);
+    char nearest_good = good_string[0];
+
+    for (int i = 1; i < n; ++i) {
+        int distance = abs_diff(current, good_string[i]);
+        if (distance < min_distance) {
+            min_distance = distance;
+            nearest_good = good_string[i];
+        } else if (distance == min_distance) {
+            // If distance is the same, choose the letter nearest to the previous good letter
+            if (abs_diff(previous_good, good_string[i]) < abs_diff(previous_good, nearest_good)) {
+                nearest_good = good_string[i];
+            }
+        }
+    }
+
+    return nearest_good;
+}
+
+int main() {
+    char good_string[101];
+    char name[10001];
+
+    // Input the good string and the name
+    scanf("%s", good_string);
+    scanf(" %[^\n]s", name);  // Reading the name including spaces
+
+    int total_distance = 0;
+    char previous_good = good_string[0]; // Initially, previous good letter is the first letter of the good string
+
+    // Calculate total distance
+    for (int i = 0; i < strlen(name); ++i) {
+        char current_char = name[i];
+
+        // If current_char is in the good string, no need to change it
+        if (strchr(good_string, current_char)) {
+            previous_good = current_char;  // Update previous good letter
+        } else {
+            // Find the nearest good letter and add the distance
+            char nearest_good = find_nearest_good_letter(current_char, good_string, previous_good);
+            total_distance += abs_diff(current_char, nearest_good);
+            previous_good = nearest_good;  // Update previous good letter
+        }
+    }
+
+    // Output the total distance
+    printf("%d\n", total_distance);
+
+    return 0;
+}
