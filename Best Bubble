@@ -1,0 +1,37 @@
+def count_swaps(arr, ascending=True):
+    n = len(arr)
+    swaps = 0
+    if ascending:
+        for i in range(n):
+            for j in range(0, n-i-1):
+                if arr[j] > arr[j+1]:
+                    # Swap
+                    arr[j], arr[j+1] = arr[j+1], arr[j]
+                    swaps += 1
+    else:
+        for i in range(n):
+            for j in range(0, n-i-1):
+                if arr[j] < arr[j+1]:
+                    # Swap
+                    arr[j], arr[j+1] = arr[j+1], arr[j]
+                    swaps += 1
+    return swaps
+
+def min_swaps_to_beautiful(arr):
+    # Count swaps for ascending order
+    asc_arr = arr.copy()
+    asc_swaps = count_swaps(asc_arr, ascending=True)
+
+    # Count swaps for descending order
+    desc_arr = arr.copy()
+    desc_swaps = count_swaps(desc_arr, ascending=False)
+
+    # Return the minimum of both counts
+    return min(asc_swaps, desc_swaps)
+
+# Read input
+N = int(input())
+arr = list(map(int, input().split()))
+
+# Output the result
+print(min_swaps_to_beautiful(arr))
